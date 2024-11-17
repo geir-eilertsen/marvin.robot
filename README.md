@@ -16,3 +16,7 @@ The Spring AI implemented brain is in the marvin.brain.springai module. It needs
 Use a docker container to run the vector store. There is a docker compose file in the marvin.brain.springai docker folder.
 
 ## How to build Marvin
+
+Maven is used to build Marvin. You can build the whole project with the following command:
+
+```
