@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: openhab
+    include: openhab, gemini
   application:
     name: Marvin the Robot
     version: 0.0.1
@@ -10,6 +10,16 @@ spring:
         initialize-schema: true
     openai:
       api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
+      chat:
+        enabled: false
+    vertex:
+      ai:
+        gemini:
+            #AIzaSyABBB9BvU2wunNQesvLmy8Myx_ghssoiok
+          project-id: marvin-442314
+          location: europe-west2
+          api-endpoint: europe-north1-aiplatform.googleapis.com
+
   cassandra:
     local-datacenter: datacenter1
     keyspace-name: springframework

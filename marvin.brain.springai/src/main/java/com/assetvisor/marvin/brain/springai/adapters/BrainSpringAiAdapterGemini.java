@@ -30,18 +30,21 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.model.function.FunctionCallback;
-import org.springframework.ai.openai.OpenAiChatOptions;
-import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
+import org.springframework.ai.model.function.FunctionCallback.SchemaType;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.cassandra.CassandraVectorStore;
+import org.springframework.ai.vertexai.gemini.VertexAiGeminiChatModel.ChatModel;
+import org.springframework.ai.vertexai.gemini.VertexAiGeminiChatOptions;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
+@Profile("gemini")
 @Component
-public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembering {
+public class BrainSpringAiAdapterGemini implements ForInvokingIntelligence, ForRemembering {
 
-    private final Log LOG = LogFactory.getLog(BrainSpringAiAdapter.class);
+    private final Log LOG = LogFactory.getLog(BrainSpringAiAdapterGemini.class);
     @SuppressWarnings("FieldCanBeLocal")
     private final int VECTORSTORE_TOP_K = 20;
     private final int CHAT_MEMORY_RETRIEVE_SIZE = 10;
@@ -98,8 +101,9 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
     private FunctionCallback map(Tool<?, ?> environmentFunction) {
         return FunctionCallback.builder()
             .function(environmentFunction.name(), environmentFunction)
-            .inputType(environmentFunction.inputType())
             .description(environmentFunction.description())
+            .schemaType(SchemaType.OPEN_API_SCHEMA)
+            .inputType(environmentFunction.inputType())
             .build();
     }
 
@@ -121,7 +125,6 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
         if (chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
-
         ChatClientRequestSpec chatClientRequestSpec = chatClient.prompt()
             .user(u -> promptUserSpec(u, message))
             .options(options(message))
@@ -154,20 +157,20 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
         }
     }
 
-    private OpenAiChatOptions options(Message message) {
+    private VertexAiGeminiChatOptions options(Message message) {
         if(message instanceof TextMessage textMessage) {
-            return OpenAiChatOptions.builder()
-                .model(ChatModel.GPT_4_O_MINI)
+            return VertexAiGeminiChatOptions.builder()
+                .model(ChatModel.GEMINI_1_5_FLASH)
                 .build();
         }
         if(message instanceof SpeechMessage speechMessage) {
-            return OpenAiChatOptions.builder()
-                .model(ChatModel.GPT_4_O_AUDIO_PREVIEW)
+            return VertexAiGeminiChatOptions.builder()
+                .model(ChatModel.GEMINI_1_5_FLASH)
                 .build();
         }
         if(message instanceof Observation observation) {
-            return OpenAiChatOptions.builder()
-                .model(ChatModel.GPT_4_O_MINI)
+            return VertexAiGeminiChatOptions.builder()
+                .model(ChatModel.GEMINI_1_5_FLASH)
                 .build();
         }
         throw new IllegalArgumentException("Unknown message type: " + message.getClass());
