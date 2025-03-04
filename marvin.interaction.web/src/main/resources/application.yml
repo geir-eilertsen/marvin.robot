@@ -20,9 +20,9 @@ spring:
         options:
           model: deepseek-chat
           user: Marvin
-        api-key: sk-8fa295df539345e0b638130c3e9d2029
+        api-key: secret
       #      api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
-      api-key: sk-8fa295df539345e0b638130c3e9d2029 # OpenAI API key, get your own at https://platform.openai.com
+      api-key: secret # OpenAI API key, get your own at https://platform.openai.com
       base-url: https://api.deepseek.com
     ollama:
       embedding:
