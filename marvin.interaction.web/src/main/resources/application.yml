@@ -13,7 +13,23 @@ spring:
         initialize-schema: true
         keyspace: ${spring.cassandra.keyspace-name}
     openai:
-      api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
+      embedding:
+        enabled: false
+      chat:
+        enabled: true
+        base-url: https://api.deepseek.com
+        options:
+          model: deepseek-chat
+          user: Marvin
+        api-key: secret
+      #      api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
+      api-key: secret # OpenAI API key, get your own at https://platform.openai.com
+      base-url: https://api.deepseek.com
+    ollama:
+      embedding:
+        enabled: true
+      chat:
+        enabled: false
   cassandra:
     local-datacenter: datacenter1
     keyspace-name: springframework
