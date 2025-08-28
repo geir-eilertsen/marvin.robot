@@ -58,7 +58,12 @@ public class SpringAiSpeechConversionAdapter implements ForConvertingTextToSpeec
             .language(environment.getProperty("marvin.language","en"))
             .build();
 
-        org.springframework.core.io.Resource audioResource = new org.springframework.core.io.ByteArrayResource(speech);
+        org.springframework.core.io.Resource audioResource = new org.springframework.core.io.ByteArrayResource(speech) {
+            @Override
+            public String getFilename() {
+                return "dummy.wav";
+            }
+        };
 
         var audioTranscriptionPrompt = new AudioTranscriptionPrompt(audioResource, transcriptionOptions);
         var response = openAiAudioTranscriptionModel.call(audioTranscriptionPrompt);
